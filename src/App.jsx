@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import CurrentForecast from "./components/CurrentForecast";
 import Search from "./components/Search";
 import WeatherDetails from "./components/WeatherDetails";
@@ -7,25 +7,67 @@ import Footer from "./components/Footer";
 import useFetch from "./hooks/useFetch";
 
 function App() {
-  const [city, setCity] = useState('London')
-  const [currentForecast, setCurrentForecast] = useState(null);
-  const [inputText, setInputText] = useState("");
-  // console.log(import.meta.env.VITE_API_KEY)
+  const [searchResult, setSearchResult] = useState("");
+  const [city, setCity] = useState(null);
+  const [futureForecast, setFutureForecast] = useState({});
 
-  const { data } = useFetch(`http://api.weatherapi.com/v1/current.json?key=8c92749d2b6f4870b3a202908222811=${city}&aqi=no`);
-  console.log(data);
+  useEffect(() => {
+    if (city) {
+      useFetch(
+        `https://api.weatherapi.com/v1/current.json?key=${
+          import.meta.env.VITE_API_KEY
+        }&q=${city}&aqi=no`,
+        setSearchResult
+      );
+
+      //   getFutureDate()
+
+      // useFetch(
+      //   `http://api.weatherapi.com/v1/future.json?key=b8f956e94956426c897214448222911&q=london&dt=2022-12-30`,
+      //   setFutureForecast
+      // );
+    } else {
+      setSearchResult({});
+    }
+  }, [city]);
+
+  // useEffect(() => {
+  //   if (Object.keys(searchResult).length > 0) {
+  //     // let date = getFutureDate(searchResult.location.localtime);
+
+  //     useFetch(
+  //       `http://api.weatherapi.com/v1/future.json?key=b8f956e94956426c897214448222911&q=${city}&dt=${date}`,
+  //       setFutureForecast
+  //     );
+  //   }
+  // }, [searchResult]);
+
+  // const getFutureDate = (date) => {
+  //   const dateArr = date.split(" ");
+
+  //   let futureDate = dateArr[0];
+  //   // futureDate.setDate(futureDate.getDate() + 1);
+  //   return futureDate
+  // };
 
   return (
     <div className="App font-body relative text-white">
       <section className="max-w-xs mx-auto pt-8 md:max-w-4xl lg:max-w-6xl">
         <div className="md:flex md:justify-between md:items-end">
-          <Search inputText={inputText} setInputText={setInputText} />
-          <CurrentForecast />
+          <Search
+            setCity={setCity}
+            // searchResult={searchResult}
+          />
+          <CurrentForecast
+            city={city}
+            searchResult={searchResult}
+            // searchResult={checkCityValue()}
+          />
         </div>
 
         <div className="md:flex md:justify-between md:mt-20 md:mb-32">
           <WeatherDetails />
-          <FutureForecast />
+          <FutureForecast futureForecast={futureForecast} />
         </div>
       </section>
       <Footer />

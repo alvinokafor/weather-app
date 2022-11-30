@@ -1,4 +1,5 @@
-export default function FutureForecast() {
+export default function FutureForecast({futureForecast}) {
+  // console.log(futureForecast)
     return (
       <section className="relative z-30 mt-10 md:w-[30%] md:mt-0">
         <h4 className="font-medium mb-4">Future Forecast</h4>

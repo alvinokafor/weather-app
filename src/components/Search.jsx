@@ -1,17 +1,17 @@
-
-
-export default function Search({setInputText, inputText}) {
+import { useState } from 'react'
+export default function Search({setCity, searchResult}) {
+  const [inputText, setInputText] = useState("");
 
     const searchHandler = (e) => {
         setInputText(e.target.value);
-        console.log(inputText)
+        // console.log(inputText)
       };
     
 
     const submitHandler = (e) => {
         e.preventDefault();
 
-        return inputText
+        setCity(inputText) 
       };
     
 
